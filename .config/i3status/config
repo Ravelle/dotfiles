@@ -1,0 +1,74 @@
+# i3status configuration file.
+# see "man i3status" for documentation.
+
+# It is important that this file is edited as UTF-8.
+# The following line should contain a sharp s:
+# ß
+# If the above line is not correctly displayed, fix your editor first!
+
+general {
+        separator = 0
+        markup = "pango"
+        colors = true
+        interval = 1
+        color_good = "#00F000"
+        color_bad = "#F00000"
+        color_degraded = "#FF00FF"
+}
+
+order += "volume master"
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "battery 0"
+order += "cpu_usage"
+order += "memory"
+order += "cpu_temperature 0"
+order += "tztime local"
+
+volume master {
+        format = '<span foreground="#000000" background="#3770ad" size="12000"> : %volume </span>'
+        format_muted = '<span foreground="#000000" background="#3770ad" size="12000"> 婢 muted (%volume) </span>'
+        device = "default"
+        mixer = "Master"
+        mixer_idx = -1
+}
+
+wireless _first_ {
+        format_up = '<span background="#383838">  </span><span foreground="#000000" background="#3770ad" size="12000">%quality <b>%essid </b></span>'
+        format_down = ": down"
+}
+
+ethernet _first_ {
+        format_up = '<span foreground="black" background="#69b84f" size="12000" weight="heavy"> : (%speed) </span>'
+        format_down = '<span foreground="black" background="#ad4737" size="12000"> : down </span>'
+}
+
+battery 0 {
+        format = '<span background="#3d3d3d" size="12000">%status %percentage </span>'
+        format_down = "No battery"
+        status_chr = '<span foreground="black" background="#4287f5">  </span>'
+        status_bat = "  "
+        status_unk = "  "
+        status_full = '<span foreground="black" background="#37ad51" size="12000">  </span>'
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        low_threshold = 10
+}
+
+cpu_usage {
+    format = '<span foreground="#000000" background="#3770ad"><span size="14000">  </span><span size="12000">%usage </span></span>'
+}
+memory {
+        format = '<span foreground="#000000" background="#3770ad"><span size="14000"> ﬙ </span><span size="12000">%percentage_used </span></span>'
+        #threshold_degraded = "1G"
+        #format_degraded = "MEMORY < %available"
+}
+
+cpu_temperature 0 {
+        format = '<span foreground="#000000" background="#3770ad" size="12000"> %degrees°C </span>'
+        path = '/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input'
+}
+
+tztime local {
+        format_time = "%H:%M:%S - %d-%m-%Y"
+        format = '<span foreground="black" background="#c971c4" size="12000"> %time </span>'
+}
