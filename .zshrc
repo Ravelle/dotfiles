@@ -1,16 +1,32 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+alias vim="nvim"
+alias vpn="sudo openvpn /etc/openvpn/vpn3907A_96.ovpn"
+export VULKAN_SDK='/home/max/vulkan/1.3.275.0/x86_64'
+
+export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH="/home/max/.pyenv/bin:$PATH"
+export PATH="/home/max/scripts:$PATH"
+export PATH="$(yarn global bin):$PATH"
+export PATH="/home/max/.gem/ruby/2.7.0/bin:$PATH"
+export PATH="$VULKAN_SDK/bin:$PATH"
+export PATH="$VULKAN_SDK/include:$PATH"
 eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
 # Path to your oh-my-zsh installation.
   export ZSH=/home/max/.oh-my-zsh
-
+export npm_config_jobs=16
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="agnoster"
 
+#ZSH_THEME="agnoster"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
 # cause zsh load theme from this variable instead of
@@ -41,7 +57,7 @@ ZSH_THEME="agnoster"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -61,8 +77,9 @@ ZSH_THEME="agnoster"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git,
-  ~/zshplugins/kube-ps1.zsh
+  git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -72,11 +89,17 @@ source $ZSH/oh-my-zsh.sh
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+# export LANG=en_GB.UTF-8
 
 # editor
 export EDITOR='vim'
 
+
+# VULKAN
+
+export LD_LIBRARY_PATH="$VULKAN_SDK/lib" # Dynamically-loaded libraries (e.g., layers)
+export VK_LAYER_PATH="$VULKAN_SDK/share/vulkan/explicit_layer.d" #Only the SDK layer manifest .json files
+export VK_ADD_LAYER_PATH="$VULKAN_SDK/share/vulkan/explicit_layer.d" #The SDK and system layer manifest .json files
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -91,6 +114,7 @@ export EDITOR='vim'
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias startk="startx ./.xinit-kde"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/max/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '/home/max/Downloads/google-cloud-sdk/path.zsh.inc'; fi
@@ -108,12 +132,25 @@ bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
 
-function zle-line-init zle-keymap-select {
-    VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
-    RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
-    zle reset-prompt
-}
+#function zle-line-init zle-keymap-select {
+#    VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
+#    RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
+#    zle reset-prompt
+#}
 
-zle -N zle-line-init
+#zle -N zle-line-init
 zle -N zle-keymap-select
 export KEYTIMEOUT=1
+
+# tabtab source for electron-forge package
+# uninstall by removing these lines or running `tabtab uninstall electron-forge`
+[[ -f /home/max/electron-forge-react/node_modules/tabtab/.completions/electron-forge.zsh ]] && . /home/max/electron-forge-react/node_modules/tabtab/.completions/electron-forge.zsh
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"

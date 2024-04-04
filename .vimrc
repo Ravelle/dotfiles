@@ -1,10 +1,18 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin Installation
 "
+if empty(glob('~/.vim/autoload/plug.vim'))
+      silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+          \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    endif
 call plug#begin('~/.vim/plugged')
 
 " Plug 'janko/vim-test'
 Plug 'kien/ctrlp.vim'
+Plug 'w0rp/ale'
+Plug 'sheerun/vim-polyglot'
+Plug 'ap/vim-css-color'
 " Plug 'mileszs/ack.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'scrooloose/nerdtree'
@@ -30,8 +38,8 @@ set cursorcolumn
 :syntax on
 :set number
 :set relativenumber
-:set tabstop=4
-:set shiftwidth=4
+:set tabstop=2 " 4
+:set shiftwidth=2 " 4
 :set expandtab
 :set ruler
 :set nolist
@@ -39,6 +47,10 @@ set cursorcolumn
 :set smartindent
 :set ignorecase
 
+if executable('rg')
+      " Use rg over grep
+      set grepprg=rg\ --vimgrep
+endif
 "         myfather                  
 " add recursion to the search path (find)
 :set path+=**
@@ -91,6 +103,9 @@ let g:lightline = {
       \ 'component_function': {
       \   'gitbranch': 'fugitive#head'
       \ },
+      \ 'component': {
+      \   'filename': '%F',
+      \}
       \ }
 "let g:lightline = {}
 "let g:lightline.tabline          = {'left': [['buffers']], 'right': [['close']]}
@@ -158,16 +173,45 @@ call NERDTreeHighlightFile('Makefile', 'Magenta', 'none', '#ff00ff', '#151515')
 call matchadd('MaxIndenting', '^\t*\zs \+', 100)
 call matchadd('MaxTrailing', '\s\+$', 100)
 
+au BufNewFile,BufRead * if &syntax == '' | set syntax=sh | endif
 :highlight IndentLevel1 ctermbg=236 ctermfg=NONE
 :highlight IndentLevel2 ctermbg=237 ctermfg=NONE
 :highlight IndentLevel3 ctermbg=238 ctermfg=NONE
 :highlight IndentLevel4 ctermbg=239 ctermfg=NONE
 :highlight IndentLevel5 ctermbg=240 ctermfg=NONE
-call matchadd('IndentLevel1', '\(^\s\{3}\)\@<=\s', 100)
-call matchadd('IndentLevel2', '\(^\s\{7}\)\@<=\s', 100)
-call matchadd('IndentLevel3', '\(^\s\{11}\)\@<=\s', 100)
-call matchadd('IndentLevel4', '\(^\s\{15}\)\@<=\s', 100)
-call matchadd('IndentLevel5', '\(^\s\{19}\)\@<=\s', 100)
-"                     stuff and ting     
-"                    doop
+"call matchadd('IndentLevel1', '\(^\s\{3}\)\@<=\s', 100)
+"call matchadd('IndentLevel2', '\(^\s\{7}\)\@<=\s', 100)
+"call matchadd('IndentLevel3', '\(^\s\{11}\)\@<=\s', 100)
+"call matchadd('IndentLevel4', '\(^\s\{15}\)\@<=\s', 100)
+"call matchadd('IndentLevel5', '\(^\s\{19}\)\@<=\s', 100)
+"
+" ALE setup
+"
+
+
+let g:ale_linters = {
+ \ 'javascript': ['eslint'],
+ \ 'typescript': ['eslint', 'tsserver'],
+ \ 'typescriptreact': ['eslint', 'tsserver'],
+ \ 'scss': ['stylelint'],
+ \ 'cpp': ['cc']
+ \ }
+let g:ale_fixers = {
+ \ 'javascript': ['prettier', 'eslint'],
+ \ 'typescript': ['prettier', 'eslint'],
+ \ 'typescript.tsx': ['prettier', 'eslint'],
+ \ 'typescriptreact': ['prettier', 'eslint']
+ \ }
+
+"let g:ale_cpp_gcc_options = '-std=c++23 -Wall'
+let g:ale_cpp_cc_options = '-std=c++23 -Wall'
+let g:ale_cpp_cc_executable = 'gcc' " or 'clang'
+"
+
+let g:ale_sign_error = '❌'
+let g:ale_sign_warning = ''
+let g:ale_fix_on_save = 1
+"let g:ale_typescript_prettier_use_local_config = 1
+let g:ale_linters_explicit = 1
 autocmd vimenter * NERDTree
+

@@ -68,9 +68,9 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+# bindsym $mod+s layout stacking
+# bindsym $mod+w layout tabbed
+# bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -121,6 +121,7 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
+assign [class="cp-g"] $ws0
 assign [class="Google-chrome"] $ws10
 assign [class="Spotify"] $ws6
 # reload the configuration file
@@ -165,7 +166,8 @@ bar {
                    separator #696969
         }
        separator_symbol ""
-       tray_padding 0
+       tray_padding 2
+       tray_output primary
        #verbose
 }
 
@@ -173,13 +175,11 @@ bar {
 #####   (while I may group things outside of here if they make
 #####   sense as changes to the defaults, this is where
 #####   the bulk of my personal configuration will go)
-# Really not sure this belongs in i3 but
-# switch capslock and esc
-exec /usr/bin/setxkbmap -option "caps:swapescape"
 
 bindsym XF86AudioMute exec pactl set-sink-volume 0 0%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -5%
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
+bindsym Control+Shift+Escape exec systemctl suspend
 bindsym $mod+x exec scrot ~/lock/lockpreblur.png -e 'convert $f -blur "0x2" ~/lock/lockblur.png' && i3lock -i ~/lock/lockblur.png
 
 # Binds to setup monitor presets
@@ -194,9 +194,9 @@ bindsym End move workspace to output right
 #
 exec_always xcompmgr -s
 #wallpaper
-exec ~/.fehbg
+exec ~/bg/bg.sh
 #screenshots
-bindsym Print --release exec "scrot -s -e 'xclip -selection c -t image/png < $f'"
+bindsym $mod+shift+s --release exec "scrot -s -e 'xclip -selection c -t image/png < $f'"
 #dropdowns
 #calculator
 bindsym $mod+minus [instance="my3-calculator"] scratchpad show; [instance="my3-calculator"] move position center
@@ -204,7 +204,7 @@ for_window [instance="my3-calculator"] floating enable
 for_window [instance="my3-calculator"] resize set 480 600
 for_window [instance="my3-calculator"] move position center
 for_window [instance="my3-calculator"] move scratchpad
-exec --no-startup-id alacritty --class my3-calculator -e bc
+exec --no-startup-id alacritty --class my3-calculator -e bc -l
 #scratchpad
 bindsym $mod+p [instance="my3-scratchpad"] scratchpad show; [instance="my3-scratchpad"] move position center
 for_window [instance="my3-scratchpad"] floating enable
@@ -212,3 +212,7 @@ for_window [instance="my3-scratchpad"] resize set 480 600
 for_window [instance="my3-scratchpad"] move position center
 for_window [instance="my3-scratchpad"] move scratchpad
 exec --no-startup-id alacritty --class my3-scratchpad -e vim ~/scratchpad
+
+#scripts file execution binds
+bindsym $mod+Shift+n exec dunst-test
+

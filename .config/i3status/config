@@ -40,16 +40,16 @@ wireless _first_ {
 
 ethernet _first_ {
         format_up = '<span foreground="black" background="#69b84f" size="12000" weight="heavy"> : (%speed) </span>'
-        format_down = '<span foreground="black" background="#ad4737" size="12000"> : down </span>'
+        format_down = '<span foreground="black" background="#ad4737" size="12000">  </span>'
 }
 
 battery 0 {
         format = '<span background="#3d3d3d" size="12000">%status %percentage </span>'
         format_down = "No battery"
-        status_chr = '<span foreground="black" background="#4287f5">  </span>'
-        status_bat = "  "
-        status_unk = "  "
-        status_full = '<span foreground="black" background="#37ad51" size="12000">  </span>'
+        status_chr = " "
+        status_bat = " "
+        status_unk = " "
+        #status_full = '<span foreground="black" background="#37ad51" size="12000">  </span>'
         path = "/sys/class/power_supply/BAT%d/uevent"
         low_threshold = 10
 }
@@ -65,10 +65,11 @@ memory {
 
 cpu_temperature 0 {
         format = '<span foreground="#000000" background="#3770ad" size="12000"> %degrees°C </span>'
-        path = '/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input'
+        max_threshold = 42
+        format_above_threshold = '<span foreground="#000000" background="#FF4737" size="12000"> %degrees°C </span>'
 }
 
 tztime local {
-        format_time = "%H:%M:%S - %d-%m-%Y"
-        format = '<span foreground="black" background="#c971c4" size="12000"> %time </span>'
+        format = '<span foreground="black" background="#c971c4" size="12000">%T %d-%m-%Y</span>'
 }
+
